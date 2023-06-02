@@ -1,38 +1,684 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+*{
+  box-sizing: border-box;
+  font-family: 'Roboto','Arial', Times, serif;
+  caret-color: #3c2a21;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+::selection{
+  background-color: #d5cea3;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+input::-webkit-input-placeholder { /* Chrome */
+  color: black;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.Hidden{
+  visibility: hidden;
+  font-size: 1.5em;
+  border-radius: 50%;
+  margin-right: 2%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  height: 40px;
+  width: 40px;
+  background-color: transparent;
+}
+
+
+/* Classes */
+.NavBar{
+  border: 0px 0px 1px 0px solid #282c34;
+  height: -moz-fit-content;
+  height: fit-content;
+  justify-items: center;
+  display: flex;
+  box-shadow: 0px 0px 5px 0px ;
+  position: relative; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  left: 0;
+  right: 0;
+  width: 100%; /* Full width */
+  z-index: 5555;
+  position: fixed;
+  background-color: white;
+}
+.HamBurger{
+  margin : 0.7% 0px 0.7% 2%;
+  display: inline-flex;
+  font-size : 1.5em;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0px 0px 0px 0px;
+}
+.DisplayPicture{
+  background-color: transparent;
+  display: flex;
+  margin: 0.7% 0px 0.7% 5%;
+  margin-left: 3%;
+  align-items: center;
+  justify-content: center;
+}
+.SearchBar{
+  border: none;
+  background-color: #e6e6e6;
+  display: flex;
+  width: 30%;
+  margin: 0.3% 0% 0.3% 5%;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: space-between;
+}
+.TextField{
+  background-color: transparent;
+  color: black;
+  border: none;
+  outline: none;
+  margin-left: 2%;
+  margin-right: 2%;
+  width: 74.6%;
+  font-size: 1.5em;
+}
+.SearchIcon{
+  font-size: 1.5em;
+  display: flex;
+  margin-left: 2%;
+  padding: 0px 0px 0px 0px;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+}
+.Hud{
+  margin-left: 2%;
+  padding-right: 1%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.ProfilePic{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+.ProfilePic img{
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+.sub-menu-wrap{
+  background-color: white;
+  position: absolute;
+  top: 70px;
+  right: 5px;
+  width: 320px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 8px 0px black;
+  overflow: hidden;
+  transition: max-height 0.5s;
+}
+.sub-menu-wrap-zero{
+  max-height: 0px;
+}
+.sub-menu-wrap-400{
+  max-height: 260px;
+}
+.sub-menu{
+  background-color: white;
+  padding: 20px;
+  margin: 10px;
+}
+.user-info{
+  background-color: #d5cea3;
+  border-radius: 15px;
+  display: flex;
+  padding: 1px 0px 1px 5px;
+  align-items: center;
+}
+.user-info img{
+  width: 60px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+.sub-menu hr{
+  border: 0;
+  height: 1px;
+  width: 100%;
+  background-color: #cccccc;
+  margin: 15px 0px 10px;
+}
+.sub-menu-link{
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color:#525252;
+  margin: 12px 0;
+}
+.sub-menu-link p{
+  width: 100%;
+}
+.sub-menu-link div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  background-color: #e5e5e5;
+  border-radius: 50%;
+  padding: 8px;
+  margin-right: 15px;
+}
+.sub-menu-link span{
+  font-size: 22px;
+  transition: transform 0.5s;
+}
+.sub-menu-link:hover span{
+  transform: translateX(5px);
+}
+.sub-menu-link:hover p{
+  font-weight: 600;
+}
+.LowerHalf{
+  top: 62px;
+  position: relative;
+  display: flex;
+}
+.Tabs-active{
+  width: 13%;
+  height: 100%;
+  transition: width 0.2s;
+  position: fixed;
+  display: inline-flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  box-shadow: 0px 0px 10px 0px black;
+  background-color: white;
+  padding-top: 2%;
+}
+.Tabs-notActive{
+  width: 7%;
+  height: 100%;
+  transition: width 0.2s;
+  display: inline-flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  position: fixed;
+  box-shadow: 0px 0px 10px 0px black;
+  background-color: white;
+  padding-top: 2%;
+}
+.TabsActive{
+  transition: all 0.2s;
+  background-color: #d5cea3;
+  border-radius: 0px 50px 50px 0px;
+}
+.TabsNotes{
+  padding-left: 16%;
+  padding-top: 2%;
+  height: 50px;
+  display: flex;
+}
+.TabsNotes-notActive{
+  display: flex;
+  height: 50px;
+  padding-top: 3%;
+  padding-left: 30%;
+}
+.TabsNotesSticky{
+  font-size: 1.5em;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5%;
+  height: 40px;
+  width: 40px;
+}
+.TabsNotesStickyText{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  padding-bottom: 2%;
+}
+.TabsBin{
+  padding-left: 16%;
+  padding-top: 2%;
+  /* margin-bottom: 10%; */
+  height: 50px;
+  display: flex;
+}
+.TabsBin-notActive{
+  display: flex;
+  height: 50px;
+  padding-left: 30%;
+  padding-top: 3%;
+}
+.TabsBinTrash{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  margin-right: 5%;
+  height: 40px;
+  width: 40px;
+}
+.TabsBinTrashText{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  padding-bottom: 2%;
+}
+.Notes{
+  position:relative;
+  width: 100%;
+  padding-top: 2%;
+  margin-left: 198px;
+}
+.Notes-notActive{
+  position: relative;
+  width:100%;
+  padding-top: 2%;
+  margin-left: 107px;
+}
+.TakeaNote{
+  z-index: 0;
+  margin: 4% 0% 0% 0%;
+}
+.NoteText{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  width:50%;
+  margin: 0.3% auto 0.3% auto;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 1px #282c34;
+}
+.TakeNoteInput{
+  font-size: 1.8em;
+  background-color: transparent ;
+  width : 85%;
+  outline: none;
+  display: block;
+  border : none;
+  border-radius: 5px;
+  padding: 2% 2% 2% 2%;
+}
+.AddNote{
+  font-size: 1.5em;
+  border-radius: 50%;
+  margin-right: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  background-color: transparent;
+}
+.NotesTaken{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:space-around;
+  align-items: center;
+  margin: 3% 4% 0% 4%;
+  /* border: 1px solid black; */
+  padding-left: 4%;
+  padding-right: 4%;
+  padding-top: 4%;
+}
+.Note{
+  display: inline;
+  height: 240px;
+  width: 240px;
+  margin: 1% 1% 1% 1%;
+  border-radius: 10px 10px 10px 10px;
+  box-shadow: 0px 0px 2px 0px #282c34;
+  padding: 2% 2% 2% 2%;
+}
+.InnerText{
+  overflow: hidden;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  height: 85%;
+}
+.Controls{
+  display: flex;
+  justify-content: flex-end;
+  align-self: center;
+  height: 10%;
+}
+.Controls div{
+  height: 25px;
+  width: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ModalContainer{
+  position: fixed; /* Stay in place */
+  z-index: 6000; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.Modal{
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 6666; /* Sit on top */
+  top: 0;
+  left: 0;
+  box-shadow: 0px 0px 3px 0px #282c34;
+  margin-top : 5%;
+  border-radius: 10px;
+  margin-left: 30%;
+  padding: 2% 1.5% 1% 1.5%;
+  width: 40%; /* Full width */
+  height: 80%; /* Full height */
+  background-color: whitesmoke;
+}
+.ModalTitle{
+  border:none;
+  outline: none;
+  font-size: 2rem;
+}
+.ModalContent{
+  font-size: 1.1rem;
+  border:none;
+  outline: none;
+  height: 90%;
+  overflow-y: auto;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+.ModalFooter{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.ModalClose{
+  font-size: 1.5em;
+  display: flex;
+  height: 40px;
+  width: 70px;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+}
+/* Common  Classes*/
+.TextClear{
+  font-size: 1.5em;
+  margin-right: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+}
+
+/* Effects */
+.Clickable:hover{
+  background-color: #d5cea3;
+  transition: all 0.1s;
+  border-radius: 50%;
+}
+.TabsRound:hover{
+  background-color: #d5cea3;
+  transition: all 0.5s;
+  border-radius: 0px 50px 50px 0px;
+}
+.TabsCircle:hover{
+  transition: all 0.2s;
+  background-color: #d5cea3;
+  border-radius: 50%;
+}
+.ProfilePic:hover{
+  background-color: #d5cea3;
+}
+.Note:hover{
+  transition: all 0.2s;
+  box-shadow: 0px 0px 10px 0px #282c34;
+}
+.ModalClose:hover{
+  transition: all 0.2s;
+  /* transition: background-color 0.5s; */
+  border-radius: 5px;
+  background-color: rgba(0,0,0,0.2);
+}
+
+/* Sign In Page */
+.Login{
+  position: fixed; /* Stay in place */
+  z-index: 6000; /* Sit on top */
+  padding-top: 50px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.2); /* Black w/ opacity */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
+}
+.Card{
+  padding: 2% 2% 2% 2%;
+  margin : 5% auto 5% auto;
+  width: 400px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0px 0px 5px 0px rgb(0,0,0,0.5);
+}
+.SignIn{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.8rem;
+  margin-bottom: 5%;
+}
+.Logo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4%;
+  height: auto;
+  width: auto;
+}
+.Image{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: auto;
+}
+.Form form{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+.InputFields{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin-bottom:8%;
+  border-radius: 0px;
+  font-size: 1.5rem;
+}
+.InputFields input{
+  font-size: 1rem;
+  width: 100%;
+  height: 30px;
+  border: none;
   color: white;
+  outline: none;
+  background: transparent;
+  border-bottom: 3px solid #3c2a21;
+  /* background: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px); */
+}
+.Footer{
+  width: 100%;
+  display: flex;
+  margin-bottom: 2%;
+  align-items: center;
+}
+.Forgot{
+  width: 50%;
+}
+.Submit{
+  width: 100%;
+  padding-right: 3%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.Button{
+  display: flex;
+  height: 40px;
+  font-weight: 600;
+  width: auto;
+  padding: 0px 4px 0px 4px;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+}
+.Button:hover{
+  transition: all 0.2s;
+  /* transition: background-color 0.5s; */
+  border-radius: 5px;
+  background-color: rgba(0,0,0,0.2);
+}
+.GoogleAuth{
+  border-radius: 8px;
+  background-color:#3c2a21;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.GoogleAuth img{
+  height:35px;
+  width: auto;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Media Queries */
+@media (prefers-color-scheme : dark) {
+  *{
+    caret-color: white;
   }
-  to {
-    transform: rotate(360deg);
+  body{
+    background-color: #16181b;
+    color: #fff;
+  }
+  ::selection{
+    background-color: rgb(115, 81, 63,0.5);
+  }
+  .NavBar{
+    border: 0px 0px 1px 0px solid white;
+    background-color: #16181b;
+  }.Tabs-active{
+    background-color: #16181b;
+  }
+  .Tabs-notActive{
+    background-color: #16181b;
+  }
+  .TabsActive{
+    background-color: rgb(115, 81, 63,0.5);
+  }
+  .HamBurger{
+    color: white;
+    background-color: transparent;
+  }
+  .SearchIcon{
+    color: white;
+    background-color: transparent;
+  }
+  .TextField{
+    color: white;
+  }
+  .TextClear{
+    color: white;
+  }
+  input::-webkit-input-placeholder { /* Chrome */
+    color: white;
+  }
+  .SearchBar{
+    background-color: #282c34;
+  }
+  .Tabs{
+    background-color: #16181b;
+  }
+  .NoteText{
+    background-color: #282c34;
+    box-shadow: 0px 0px 10px 1px black;
+  }
+  .ProfilePic:hover{
+    background-color: rgb(115, 81, 63,0.5);
+  }
+  .TakeNoteInput{
+    color: white;
+  }
+  .Clickable:hover{
+    background-color: rgb(115, 81, 63,0.5);
+  }
+  .TabsRound:hover{
+    background-color: rgb(115, 81, 63,0.5);
+  }
+  .TabsCircle:hover{
+    background-color: rgb(115, 81, 63,0.5);
+  }
+  .Modal{
+    background-color: #282c34;
+  }
+  .Note{
+  box-shadow: 0px 0px 3px 0px #5f6368;
+  }
+  .Note:hover{
+  transition: all 0.2s;
+  box-shadow: 0px 0px 6px 0px #5f6368;
+  }
+  .sub-menu-wrap{
+    background-color: #282c34;
+  }
+  .sub-menu{
+    background-color: #282c34;
+  }
+  .sub-menu-link div{
+    background-color: #5f6368;
+    color : white
+  }
+  .sub-menu-link p{
+    color:white;
+  }
+  .sub-menu-link span{
+    color:white
+  }
+  .user-info{
+    background-color: rgb(115, 81, 63,0.5);
+  }
+  .GoogleAuth{
+    background-color:#d5cea3;
+  }
+  .InputFields input{
+    border-bottom: 3px solid #d5cea3;
+  }
+  .Card{
+    background: rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
   }
 }
