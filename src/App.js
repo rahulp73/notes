@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMagnifyingGlass, faPlus,faBars, faXmark, faNoteSticky, faTrashCan, faUser, faArrowRightFromBracket, faGreaterThan, faTrashCanArrowUp} from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faPlus,faBars, faXmark, faNoteSticky, faTrashCan, faUser, faArrowRightFromBracket, faTrashCanArrowUp, faPencil} from "@fortawesome/free-solid-svg-icons";
+// import { faGreaterThan } from "@fortawesome/free-solid-svg-icons";
 import './App.css';
 import { useState,useEffect, useRef } from 'react';
 import GoogleLogo from './Google-logo.png';
@@ -23,6 +24,9 @@ function App() {
   const [state, setState] = useState(true)
   const [loginState, setLoginState] = useState(true)
   const [userId, setUserId] = useState()
+  const [dashboard, setDasboardState] = useState(false)
+  const [image, setImage] = useState({imageUrl : '', imageKey : ''})
+  const [newUser, setNewAuthor] = useState({photo:'',username:'',name:'', id: ''})
 
   //useRef
   const intialRender = useRef(true)
@@ -130,8 +134,8 @@ function App() {
   const handleSignInSubmit = () =>{
     if(username.length>0 && password.length>0){
       const data = {
-        userName : username,
-        password : password
+        userName : username.trim(),
+        password : password.trim()
       }
       fetch('http://localhost:8080/signin',{
         method : 'post',
@@ -143,6 +147,9 @@ function App() {
         if(data.status === 200){
           setUserId(data.body)
           setName(data.name)
+          setNewAuthor({...newUser, username : data.username, name : data.name, id:data.body, photo : data.photo})
+          const imageurl = 'http://localhost:8080/' + data.photo
+          setImage({...image,imageUrl: imageurl, imageKey : data.photo})
           intialRender.current = false
           setLoginState(false)
         } else {
@@ -154,9 +161,9 @@ function App() {
   const handleSignUpSubmit = () =>{
     if(username.length>0 && name.length>0 && password.length>0){
       const data = {
-        userName : username,
-        name : name,
-        password : password
+        userName : username.trim(),
+        name : name.trim(),
+        password : password.trim()
       }
       fetch('http://localhost:8080/signup',{
         method : 'post',
@@ -165,8 +172,15 @@ function App() {
           'Content-Type' : 'application/json'
         }
       }).then(res => res.json()).then(data => {
-        if(data.status == 200){
-          setUserId(data.body.insertedId)
+        if(data.id === 0){
+          console.log('Username Already Exists')
+        }
+        if(data.status === 200){
+          setUserId(data.id)
+          setName(data.name)
+          setNewAuthor({...newUser, username : data.username, name : data.name, id:data.body, photo : data.photo})
+          const imageurl = 'http://localhost:8080/' + data.photo
+          setImage({...image,imageUrl: imageurl, imageKey : data.photo})
           intialRender.current = false
           setLoginState(false)
         } else {
@@ -174,6 +188,47 @@ function App() {
         }
       })
     }
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const formData = new FormData();
+    formData.append('id',userId)
+    formData.append('username', newUser.username)
+    formData.append('name', newUser.name)
+    formData.append('photo', newUser.photo)
+
+    console.log(newUser.photo)
+    fetch("http://localhost:8080/dashboard", {
+        method: 'POST',
+        body: formData,
+    })
+    .then(res => res.json())
+    .then(data => {
+      const imageurl = 'http://localhost:8080/' + data.imageName
+      setImage({...image,imageUrl: imageurl, imageKey : data.imageName})
+    })
+  }
+  const handleLogOut = ()=>{
+    setSearchValue("");
+    setTakeANoteValue("")
+    setToggle(true)
+    setNotes([])
+    setDeletedNotes([])
+    setModelState(false)
+    setModalText('')
+    setModalID('')
+    setTabs(true)
+    setProfileState(false)
+    setUserName('')
+    setPassword('')
+    setName('')
+    setState(true)
+    setUserId()
+    setLoginState(true)
+    setImage({imageUrl:'',imageKey:''})
+
+    //useRef
+    intialRender.current = true
   }
 
   // UseEffect
@@ -217,6 +272,14 @@ function App() {
   const ModalTextChange = (event) => {
     setModalText(event.target.textContent)
   }
+  const handleChange = (e) => {
+    setNewAuthor({...newUser, [e.target.name] : e.target.value})
+  }
+  const handlePhoto = (e) => {
+    debugger
+    setNewAuthor({...newUser, photo : e.target.files[0]})
+    console.log(newUser.photo)
+  }
 
   // Clearing Functions
   const clearFunction = () => {
@@ -243,38 +306,37 @@ function App() {
           <div className='TextClear Clickable' onClick={ clearFunction }><FontAwesomeIcon icon={ faXmark } /></div>
         </div>
         <div className="Hud">
-          <div className="ProfilePic" onClick={() => setProfileState(!ProfileState)}><img src="https://uploads.turbologo.com/uploads/design/hq_preview_image/5097676/draw_svg20210617-26747-23281c.svg.png" alt="Google"/></div>
+          <div className="ProfilePic" onClick={() => setProfileState(!ProfileState)}><img src={image.imageUrl} key={image.imageKey} alt="Google"/></div>
         </div>
         <div className={`sub-menu-wrap ${ProfileState? 'sub-menu-wrap-400' : 'sub-menu-wrap-zero'}`}>
           <div className='sub-menu'>
             <div className='user-info'>
-              <img src='https://uploads.turbologo.com/uploads/design/hq_preview_image/5097676/draw_svg20210617-26747-23281c.svg.png' alt="ProfilePic"/>
+              <img src={image.imageUrl} key={image.imageKey} alt="ProfilePic"/>
               <h2>{name}</h2>
             </div>
             <hr/>
-            <a href="#" className="sub-menu-link">
+            <div className="sub-menu-link" onClick={() => {setDasboardState(true)}}>
               <div><FontAwesomeIcon icon={faUser} /></div>
               <p>Edit Profile</p>
-              <span><FontAwesomeIcon icon={faGreaterThan}/></span>
-            </a>
-            <a href="#" className="sub-menu-link">
+              {/* <span><FontAwesomeIcon icon={faGreaterThan}/></span> */}
+            </div>
+            <div className="sub-menu-link" onClick={()=>{handleLogOut()}}>
               <div><FontAwesomeIcon icon={faArrowRightFromBracket} /></div>
               <p>Log Out</p>
-              <span><FontAwesomeIcon icon={faGreaterThan}/></span>
-            </a>
-
+              {/* <span><FontAwesomeIcon icon={faGreaterThan}/></span> */}
+            </div>
           </div>
         </div>
       </nav>
       {!loginState && <><div className="LowerHalf">
-        <div className={`Tabs-${toggle? "active" : "notActive"}`}>
-          <div className={`${toggle? 'TabsNotes' : 'TabsNotes-notActive'} ${toggle? 'TabsRound' : ''} ${Tabs? 'TabsActive' : ''}`} onClick={() => setTabs(true)}>
-            <div className={`TabsNotesSticky ${toggle? '' : 'TabsCircle'}`}><FontAwesomeIcon icon={ faNoteSticky } /></div>
-            <div className='TabsNotesStickyText' style={{display : `${toggle? 'inline-flex' : 'none' }`}}>Notes</div>
+        <div className="Tabs" style={{width:toggle?"13%":"7%"}} >
+          <div className={`TabsRound ${Tabs? 'TabsActive' : ''}`} onClick={() => setTabs(true)} style={{padding: '15px', paddingLeft:'0px', height:'60px'}}>
+            <p className="Experimental"><FontAwesomeIcon icon={ faNoteSticky } /></p>
+            <p className="ExperimentalText" style={{display : `${toggle? 'inline' : 'none' }`}}>Notes</p>
           </div>
-          <div className={`${toggle? 'TabsBin' : 'TabsBin-notActive'} ${toggle? 'TabsRound' : ''} ${Tabs? '' : 'TabsActive'}`} onClick={() => setTabs(false)}>
-            <div className={`TabsBinTrash ${toggle? '' : 'TabsCircle'}`}><FontAwesomeIcon icon={ faTrashCan } /></div>
-            <div className='TabsBinTrashText' style={{display : `${toggle? 'inline-flex' : 'none' }`}}>Trash</div>
+          <div className={`TabsRound ${Tabs? '' : 'TabsActive'}`} onClick={() => setTabs(false)} style={{padding: '15px', paddingLeft:'0px'}}>
+            <p className="Experimental"><FontAwesomeIcon icon={ faTrashCan } /></p>
+            <p className="ExperimentalText" style={{display : `${toggle? 'inline' : 'none' }`}}>Trash</p>
           </div>
         </div>
         <div className={`${toggle? 'Notes' : 'Notes-notActive'}`}>
@@ -367,6 +429,23 @@ function App() {
       </div>
       </div>
       </>}
+      <div className='ModalContainer' style={{display : `${dashboard? 'block' : 'none' }`}}>
+        <div className="DashboardModal">
+          <div className="DashboardHeader" onClick={()=>{setDasboardState(!dashboard)}}>
+            <div className="TextClear Clickable"><FontAwesomeIcon icon={faXmark} /></div>
+          </div>
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
+            <div className="DashboardImage"><img src={image.imageUrl} key={image.imageKey} alt="ProfilePicture"/></div>
+            <div className="ImageOptions">
+              <div className="DashboardEdit" style={{fontSize:'1.2em'}}><label htmlFor="photo" style={{cursor:'pointer'}}><FontAwesomeIcon icon={faPencil}/></label><input type="file" accept=".png, .jpg, .jpeg" id="photo" onChange={handlePhoto} name="photo" style={{display:'none'}}/></div>
+              <div className="DashboardEdit" style={{fontSize:'1.5em'}}><FontAwesomeIcon icon={faXmark}/></div>
+            </div>
+            <div className='InputFields'><input type='username' placeholder='Username' disabled onChange={handleChange} value={newUser.username} style={{borderRadius:'8px',padding: '2% 2% 2% 2%'}}></input></div>
+            <div className='InputFields'><input type='name' placeholder='Name' onChange={handleChange} value={newUser.name} style={{borderRadius:'8px',padding: '2% 2% 2% 2%'}}></input></div>
+            <input className="DashboardSubmit" type="submit" value="Save"/>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
